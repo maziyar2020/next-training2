@@ -7,12 +7,12 @@ import { useEffect, useState } from "react"
 
 export default function Home() {
   const [loading, setLoading] = useState(true)
-  const [data, setData] = useState(null)
+  const [todos, setTodos] = useState(null)
 
   useEffect(() => {
     axios.get('/api/todos')
-      .then(res => {
-        setData(res.data.todos)
+      .then(({ data }) => {
+        setTodos(data.todos)
         setLoading(false)
       })
       .catch(err => console.log(err))
@@ -21,8 +21,8 @@ export default function Home() {
   if (loading) return <div className="loading"> <LoadingSpinner /> </div>
 
   const deleteTodos = (item) => {
-    axios.delete(`/api/todos/${item}`).then(({data})=>{
-      setData(data.todos)
+    axios.delete(`/api/todos/${item}`).then(({ data }) => {
+      setTodos(data.todos)
       setLoading(false)
     })
   }
@@ -39,7 +39,7 @@ export default function Home() {
         <section className="flex justify-center items-center">
           <div className="w-full max-w-screen-md bg-white p-2 md:p-4 rounded-xl">
             {/* loop over Array of data */}
-            {data.map(item =>
+            {todos.map(item =>
               <div key={item.id} className="flex items-center justify-between border border-gray-100 mb-4 p-3 md:p-4 rounded-md" >
                 {/* Todo name */}
                 <span>{item.title} </span>
