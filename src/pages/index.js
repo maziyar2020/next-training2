@@ -3,6 +3,7 @@ import Navbar from "components/common/Navbar"
 import LoadingSpinner from "components/common/Loading/Loading"
 import { useEffect, useState } from "react"
 import TodoList from "components/todos/todoList"
+import AddNewTodo from "components/todos/AddNewTodo"
 
 export default function Home() {
   // our states
@@ -22,6 +23,16 @@ export default function Home() {
   // this function will delete our selected Todo
   const deleteTodos = (item) => {
     axios.delete(`/api/todos/${item}`).then(({ data }) => {
+      console.log(data);
+      setTodos(data.todos)
+      setLoading(false)
+    })
+  }
+  // add new Todo
+  const addTodo = (e, item) => {
+    e.preventDefault()
+
+    axios.post(`/api/todos/`, { item }).then(({data}) => {
       console.log(data);
       setTodos(data.todos)
       setLoading(false)
@@ -47,7 +58,8 @@ export default function Home() {
       <Navbar />
       {/* Main content container */}
       <div className="container p-2 xl:max-w-screen-xl mx-auto">
-        <section className="flex justify-center items-center">
+        <section className="flex flex-col justify-center items-center">
+          <AddNewTodo onAdd={addTodo} />
           <TodoList
             todos={todos}
             onDelete={deleteTodos}
