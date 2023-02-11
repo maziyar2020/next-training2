@@ -1,34 +1,45 @@
 import axios from "axios"
 import Navbar from "components/common/Navbar"
-import { CheckIcon, TrashIcon, PencilAltIcon } from '@heroicons/react/outline'
-
 import LoadingSpinner from "components/common/Loading/Loading"
 import { useEffect, useState } from "react"
+import TodoList from "components/todos/todoList"
 
 export default function Home() {
+  // our states
   const [loading, setLoading] = useState(true)
   const [todos, setTodos] = useState(null)
-
+  // fetching Data
   useEffect(() => {
     axios.get('/api/todos')
       .then(({ data }) => {
         setTodos(data.todos)
         setLoading(false)
       })
+      // we can handle errors from here
       .catch(err => console.log(err))
   }, [])
 
-  if (loading) return <div className="loading"> <LoadingSpinner /> </div>
-
+  // this function will delete our selected Todo
   const deleteTodos = (item) => {
     axios.delete(`/api/todos/${item}`).then(({ data }) => {
+      console.log(data);
       setTodos(data.todos)
       setLoading(false)
     })
   }
-  const doneTodos = (item) => console.log(item);
+  // this function will mark our todo To DOne status
+  const doneTodos = (item) => {
+    axios.put(`/api/todos/${item}`)
+      .then(({ data }) => {
+        console.log(data);
+      })
+  }
+
+
   const editTodos = (item) => console.log(item);
 
+  // Dont load the page if request is loading and data not set
+  if (loading) return <div className="loading"> <LoadingSpinner /> </div>
 
   return (
     <main className="bg-gray-50 min-h-screen">
@@ -37,29 +48,12 @@ export default function Home() {
       {/* Main content container */}
       <div className="container p-2 xl:max-w-screen-xl mx-auto">
         <section className="flex justify-center items-center">
-          <div className="w-full max-w-screen-md bg-white p-2 md:p-4 rounded-xl">
-            {/* loop over Array of data */}
-            {todos.map(item =>
-              <div key={item.id} className="flex items-center justify-between border border-gray-100 mb-4 p-3 md:p-4 rounded-md" >
-                {/* Todo name */}
-                <span>{item.title} </span>
-                <div className="flex gap-x-3 items-center">
-                  {/* Task is Done */}
-                  <button className="" onClick={() => { doneTodos(item.id) }}>
-                    <CheckIcon className="w-6 h-6 stroke-green-400" />
-                  </button>
-                  {/* Delete Task */}
-                  <button className="" onClick={() => { deleteTodos(item.id) }}>
-                    <TrashIcon className="w-6 h-6 stroke-red-400" />
-                  </button>
-                  {/* Edit Task */}
-                  <button className="" onClick={() => { editTodos(item.id) }}>
-                    <PencilAltIcon className="w-6 h-6 stroke-blue-400" />
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+          <TodoList
+            todos={todos}
+            onDelete={deleteTodos}
+            onMark={doneTodos}
+            onEdit={editTodos}
+          />
         </section>
       </div>
 
