@@ -32,7 +32,7 @@ export default function Home() {
   const addTodo = (e, item) => {
     e.preventDefault()
 
-    axios.post(`/api/todos/`, { item }).then(({data}) => {
+    axios.post(`/api/todos/`, { item }).then(({ data }) => {
       console.log(data);
       setTodos(data.todos)
       setLoading(false)
@@ -58,7 +58,7 @@ export default function Home() {
       <Navbar />
       {/* Main content container */}
       <div className="container p-2 xl:max-w-screen-xl mx-auto">
-        <section className="flex flex-col justify-center items-center">
+        <section className="flex flex-col md:flex-row md:items-start md:gap-x-3 md:gap-y-4 gap-x-8 gap-y-7 justify-center items-center ">
           <AddNewTodo onAdd={addTodo} />
           <TodoList
             todos={todos}
