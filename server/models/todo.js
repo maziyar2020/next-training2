@@ -9,7 +9,11 @@ const todoSchema = new mongoose.Schema({
     description: {
         type: String,
         required: true
+    },
+    isCompleted :{
+        type : Boolean,
+        default : false
     }
 })
 
-export default mongoose.model("Todo",todoSchema)
+export default mongoose.models.Todo || mongoose.model("Todo",todoSchema)
