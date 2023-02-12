@@ -1,22 +1,20 @@
-import { todos } from '../../../../data/todos'
+import dbConnect from "server/utils/dbConnect"
 
-export default function handler(req, res) {
+import Todo from '../../../../server/models/todo'
+dbConnect()
 
-    const Method = req.method
+export default async function handler(req, res) {
 
-    switch (Method) {
-        case "POST":
-            const newTodo = {
-                id: Date.now(),
-                title: req.body.item
-            }
-            todos.push(newTodo)
-            return res.status(201).json({message : "New Data Added" ,todos})
+    const { method, body } = req
 
-        case "GET":
-            return res.status(200).json({ todos })
-
-        default:
-            break;
+    if (method === "POST") {
+        const { item } = body
+        await Todo.create({ title: item.title, description: item.description })
+        const todos = await Todo.find({})
+        return res.status(201).json({ message: "New Data Added", todos })
+    } else if (method === "GET") {
+        const todos = await Todo.find({})
+        return res.status(200).json({ todos })
     }
+
 }
