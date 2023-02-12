@@ -4,17 +4,18 @@ import LoadingSpinner from "components/common/Loading/Loading"
 import { useEffect, useState } from "react"
 import TodoList from "components/todos/todoList"
 import AddNewTodo from "components/todos/AddNewTodo"
+import Todo from "server/models/todo"
 
-export default function Home() {
+export default function Home({todos}) {
   // our states
   const [loading, setLoading] = useState(true)
-  const [todos, setTodos] = useState(null)
+  const [data, setData] = useState(todos)
 
   // fetching Data
   useEffect(() => {
     axios.get('/api/todos/')
       .then(({ data }) => {
-        setTodos(data.todos)
+        setData(data.todos)
         setLoading(false)
       })
       // we can handle errors from here
@@ -24,7 +25,7 @@ export default function Home() {
   // this function will delete our selected Todo
   const deleteTodos = (item) => {
     axios.delete(`/api/todos/${item}`).then(({ data }) => {
-      setTodos(data.todos)
+      setData(data.todos)
       setLoading(false)
     })
   }
@@ -32,7 +33,7 @@ export default function Home() {
   const addTodo = (e, item) => {
     e.preventDefault()
     axios.post(`/api/todos/`, { item }).then(({ data }) => {
-      setTodos(data.todos)
+      setData(data.todos)
       setLoading(false)
     })
   }
@@ -59,7 +60,7 @@ export default function Home() {
         <section className="flex flex-col md:flex-row md:items-start md:gap-x-3 md:gap-y-4 gap-x-8 gap-y-7 justify-center items-center ">
           <AddNewTodo onAdd={addTodo} />
           <TodoList
-            todos={todos}
+            todos={data}
             onDelete={deleteTodos}
             onMark={doneTodos}
             onEdit={editTodos}
@@ -71,3 +72,13 @@ export default function Home() {
   )
 }
 
+
+export async function getServerSideProps(context){
+  const todos = await Todo.find({})
+
+  return {
+      props : {
+          todos : JSON.parse(JSON.stringify(todos))
+      }
+  }
+}
