@@ -1,6 +1,7 @@
 import { CheckIcon, TrashIcon, PencilAltIcon } from '@heroicons/react/outline'
+import Link from 'next/link';
 
-const TodoList = ({todos,onDelete,onMark,onEdit}) => {
+const TodoList = ({ todos, onDelete, onMark, onEdit }) => {
     return (
         <>
             <div className="w-full max-w-screen-md bg-white p-2 md:p-4 rounded-xl">
@@ -8,7 +9,9 @@ const TodoList = ({todos,onDelete,onMark,onEdit}) => {
                 {todos.map(item =>
                     <div key={item._id} className="flex items-center justify-between border border-gray-100 mb-4 p-3 md:p-4 rounded-md" >
                         {/* Todo name */}
-                        <span>{item.title} </span>
+                        <Link href={`/todos/${item._id}`}>
+                            <span>{item.title} </span>
+                        </Link>
                         <div className="flex gap-x-3 items-center">
                             {/* Task is Done */}
                             <button className="" onClick={() => { onMark(item.id) }}>
