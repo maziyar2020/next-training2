@@ -9,9 +9,10 @@ export default function Home() {
   // our states
   const [loading, setLoading] = useState(true)
   const [todos, setTodos] = useState(null)
+
   // fetching Data
   useEffect(() => {
-    axios.get('/api/todos')
+    axios.get('/api/todos/')
       .then(({ data }) => {
         setTodos(data.todos)
         setLoading(false)
@@ -23,7 +24,6 @@ export default function Home() {
   // this function will delete our selected Todo
   const deleteTodos = (item) => {
     axios.delete(`/api/todos/${item}`).then(({ data }) => {
-      console.log(data);
       setTodos(data.todos)
       setLoading(false)
     })
@@ -31,9 +31,7 @@ export default function Home() {
   // add new Todo
   const addTodo = (e, item) => {
     e.preventDefault()
-
     axios.post(`/api/todos/`, { item }).then(({ data }) => {
-      console.log(data);
       setTodos(data.todos)
       setLoading(false)
     })
