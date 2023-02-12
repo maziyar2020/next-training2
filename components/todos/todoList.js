@@ -6,7 +6,7 @@ const TodoList = ({todos,onDelete,onMark,onEdit}) => {
             <div className="w-full max-w-screen-md bg-white p-2 md:p-4 rounded-xl">
                 {/* loop over Array of data */}
                 {todos.map(item =>
-                    <div key={item.id} className="flex items-center justify-between border border-gray-100 mb-4 p-3 md:p-4 rounded-md" >
+                    <div key={item._id} className="flex items-center justify-between border border-gray-100 mb-4 p-3 md:p-4 rounded-md" >
                         {/* Todo name */}
                         <span>{item.title} </span>
                         <div className="flex gap-x-3 items-center">
@@ -15,11 +15,11 @@ const TodoList = ({todos,onDelete,onMark,onEdit}) => {
                                 <CheckIcon className="w-6 h-6 stroke-green-400" />
                             </button>
                             {/* Delete Task */}
-                            <button className="" onClick={() => { onDelete(item.id) }}>
+                            <button className="" onClick={() => { onDelete(item._id) }}>
                                 <TrashIcon className="w-6 h-6 stroke-red-400" />
                             </button>
                             {/* Edit Task */}
-                            <button className="" onClick={() => { onEdit(item.id) }}>
+                            <button className="" onClick={() => { onEdit(item._id) }}>
                                 <PencilAltIcon className="w-6 h-6 stroke-blue-400" />
                             </button>
                         </div>
